@@ -1,0 +1,46 @@
+{
+  "name": "service_user",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eutopia-platform/service_user.git"
+  },
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/eutopia-platform/service_user/issues"
+  },
+  "homepage": "https://github.com/eutopia-platform/service_user#readme",
+  "watch": {
+    "build": {
+      "patterns": [
+        "src"
+      ],
+      "extensions": "js,graphql"
+    }
+  },
+  "scripts": {
+    "build": "node ./build/buildSchema.js & babel src -d dist",
+    "now-build": "npm run build",
+    "build:watch": "npm-watch build",
+    "start": "NODE_ENV=production micro ./dist/index.js",
+    "start:dev": "NODE_ENV=development micro-dev ./dist/index.js"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.4.2",
+    "graphql": "^14.2.0",
+    "micro": "^9.3.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-proposal-pipeline-operator": "^7.3.2",
+    "@babel/plugin-transform-runtime": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "fs-extra": "^7.0.1",
+    "micro-dev": "^3.0.0",
+    "npm-watch": "^0.6.0"
+  }
+}
