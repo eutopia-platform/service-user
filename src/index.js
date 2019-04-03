@@ -5,7 +5,8 @@ import rootResolvers from './rootResolvers'
 import { json } from 'micro'
 
 const headers = {
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': 'https://productcube.io'
 }
 
 const getArguments = async request => {
