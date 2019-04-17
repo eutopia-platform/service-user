@@ -4,7 +4,7 @@ const config = {
       '@babel/env',
       {
         targets: {
-          node: '11'
+          node: '8'
         },
         loose: false
       }
