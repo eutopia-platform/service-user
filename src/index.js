@@ -6,7 +6,10 @@ import { json } from 'micro'
 
 const headers = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': 'https://productcube.io'
+  'Access-Control-Allow-Origin': process.env.NODE_ENV === 'development' 
+    ? 'http://localhost:1234' : 'https://productcube.io',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'content-type'
 }
 
 const getArguments = async request => {
@@ -31,6 +34,11 @@ const getSendError = response => e =>
   |> sendWithStatusCode(response, 401, headers, #))
 
 const main = async (request, response) => {
+  if (request.method === 'OPTIONS') {
+    response.writeHead(204, headers).end()
+    return
+  }
+
   const sendError = getSendError(response)
 
   try {
