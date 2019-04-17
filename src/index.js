@@ -35,7 +35,8 @@ const getSendError = response => e =>
 
 const main = async (request, response) => {
   if (request.method === 'OPTIONS') {
-    response.writeHead(204, headers).end()
+    response.writeHead(204, headers)
+    response.end()
     return
   }
 
