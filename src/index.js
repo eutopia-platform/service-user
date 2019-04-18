@@ -45,7 +45,10 @@ const main = async (request, response) => {
   try {
     const args = await getArguments(request)
 
-    const context = {}
+    const context = {
+      authUrl: 'https://api.productcube.io/auth',
+      token: request.headers['session-token']
+    }
     const query = args.query
     const variables = args.variables
     const operationName = args.operationName

@@ -3,5 +3,8 @@
   "alias": ["user.api.productcube.io"],
   "name": "service_user",
   "builds": [{ "src": "index.js", "use": "@now/node" }],
-  "scope": "eutopia"
+  "scope": "eutopia",
+  "env": {
+    "AUTH_PASSWORD": "@auth-password"
+  }
 }
