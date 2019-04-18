@@ -1,5 +1,11 @@
+type User {
+  status: String,
+  name: String
+}
+
 type Query {
   hello: String
+  user: User
 }
 
 schema {
