@@ -31,7 +31,9 @@
     "@babel/runtime": "^7.4.3",
     "axios": "^0.18.0",
     "graphql": "^14.2.0",
-    "micro": "^9.3.3"
+    "knex": "^0.16.5",
+    "micro": "^9.3.3",
+    "pg": "^7.10.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",

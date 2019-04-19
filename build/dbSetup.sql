@@ -11,4 +11,5 @@ CREATE TABLE sc_user.user (
 DROP USER IF EXISTS service_user;
 CREATE USER service_user;
 
+GRANT USAGE ON SCHEMA sc_user TO service_user;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA sc_user TO service_user;
