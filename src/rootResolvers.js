@@ -61,6 +61,15 @@ const rootResolvers = {
       callname: user.callname,
       email: user.email
     }
+  },
+
+  logout: async (_, context) => {
+    console.log('logout', context.token)
+    await axios.post(context.authUrl, {
+      query: `mutation {
+        logout(token: "${context.token}")
+      }`
+    })
   }
 }
 
