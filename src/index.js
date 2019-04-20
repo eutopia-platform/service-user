@@ -46,7 +46,9 @@ const main = async (request, response) => {
     const args = await getArguments(request)
 
     const context = {
-      authUrl: 'https://api.productcube.io/auth',
+      authUrl: process.env.NODE_ENV === 'production' 
+        ? 'https://api.productcube.io/auth' 
+        : 'http://localhost:4000',
       token: request.headers['session-token']
     }
     const query = args.query

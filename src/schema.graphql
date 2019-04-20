@@ -1,6 +1,8 @@
 type User {
-  loggedIn: Boolean!,
+  isLoggedIn: Boolean!,
   name: String
+  callName: String
+  email: String
 }
 
 type Query {

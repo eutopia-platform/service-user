@@ -1,3 +1,7 @@
+import { graphql } from 'graphql'
+import schema from './schema'
+const axios = require('axios')
+
 const knex = require('knex')({
   client: 'pg',
   version: '10.6',
@@ -9,32 +13,53 @@ const knex = require('knex')({
   }
 })
 
-const axios = require('axios')
+const dbSchema = 'sc_user'
+const select = async cond => await knex.select().withSchema(dbSchema).from('user').where(cond)
+const selectSingle = async cond => await select(cond) |> (_ => #.length ? #[0] : null)()
+
+const createUser = async (uid, email) => {
+  await knex.withSchema(dbSchema).into('user').insert({uid, email})
+}
 
 const rootResolvers = {
-  hello: () => 'Hello World',
-  isLoggedIn: async(_, context) => {
+  hello: () => 'Hello there',
 
-  },
   user: async (_, context) => {
-    const response = (await axios.post(context.authUrl, {
-      'query': `
-      mutation{
-        isUserLoggedIn(token: "${context.token}", authpassword: "${process.env.AUTH_PASSWORD}") {
-          isloggedin
+    if (!context.token)
+      return { isLoggedIn: false }
+
+    const authUser = (await axios.post(context.authUrl, {
+      query: `{
+        user(token: "${context.token}") {
+          isLoggedIn
           uid
-          exitcode
-          msg
+          email
         }
       }`
-    })).data.data.isUserLoggedIn
+    }, { headers: {'auth': process.env.AUTH_PASSWORD} })).data.data.user
 
-    const user = await knex.withSchema('sc_user').select().from('user').where({ uid: response.uid })
-      |> (_ => # ? #[0] : null )()
+    if (!authUser.isLoggedIn)
+      return { isLoggedIn: false }
 
-    return {
-      loggedIn: response.isloggedin,
-      name: user ? user.callname : 'unknown name'
+    let user = await selectSingle({uid: authUser.uid})
+    if (!user) {
+      await createUser(authUser.uid, authUser.email)
+      user = await selectSingle({uid: authUser.uid})
+    }
+
+    if (user.name === null) {
+      await knex.withSchema(dbSchema).table('user').where({ uid: user.uid }).update({ 
+        name: user.email.split('@')[0],
+        callname: user.email.split('@')[0].split('.')[0],
+      })
+      user = await selectSingle({ uid: authUser.uid })
+    }
+    
+    return { 
+      isLoggedIn: true, 
+      name: user.name,
+      callname: user.callname,
+      email: user.email
     }
   }
 }
