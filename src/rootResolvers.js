@@ -1,6 +1,4 @@
-import { graphql } from 'graphql'
-import schema from './schema'
-const axios = require('axios')
+import { auth } from './interService'
 
 const knex = require('knex')({
   client: 'pg',
@@ -28,15 +26,15 @@ const rootResolvers = {
     if (!context.token)
       return { isLoggedIn: false }
 
-    const authUser = (await axios.post(context.authUrl, {
-      query: `{
+    const authUser = (await auth.query(`
+      {
         user(token: "${context.token}") {
           isLoggedIn
           uid
           email
         }
-      }`
-    }, { headers: {'auth': process.env.AUTH_PASSWORD} })).data.data.user
+      }
+    `)).data.user
 
     if (!authUser.isLoggedIn)
       return { isLoggedIn: false }
@@ -64,12 +62,11 @@ const rootResolvers = {
   },
 
   logout: async (_, context) => {
-    console.log('logout', context.token)
-    await axios.post(context.authUrl, {
-      query: `mutation {
+    await auth.mutate(`
+      mutation {
         logout(token: "${context.token}")
-      }`
-    })
+      }
+    `)
   }
 }
 
