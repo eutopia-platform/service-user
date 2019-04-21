@@ -16,7 +16,13 @@ const select = async cond => await knex.select().withSchema(dbSchema).from('user
 const selectSingle = async cond => await select(cond) |> (_ => #.length ? #[0] : null)()
 
 const createUser = async (uid, email) => {
-  await knex.withSchema(dbSchema).into('user').insert({uid, email})
+  if (await selectSingle({uid}) === null) {
+    try {
+      await knex.withSchema(dbSchema).into('user').insert({uid, email})
+    } catch(e) {
+      console.error('couldn\'nt create user', email)
+    }
+  }
 }
 
 const rootResolvers = {
