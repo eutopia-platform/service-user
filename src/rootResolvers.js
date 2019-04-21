@@ -59,14 +59,6 @@ const rootResolvers = {
       callname: user.callname,
       email: user.email
     }
-  },
-
-  logout: async (_, context) => {
-    await auth.mutate(`
-      mutation {
-        logout(token: "${context.token}")
-      }
-    `)
   }
 }
 

@@ -10,11 +10,6 @@ type Query {
   user: User
 }
 
-type Mutation {
-  logout: Int
-}
-
 schema {
   query: Query
-  mutation: Mutation
 }
