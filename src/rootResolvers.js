@@ -18,11 +18,7 @@ const selectSingle = async cond => await select(cond) |> (_ => #.length ? #[0] :
 
 const createUser = async (uid, email) => {
   if (await selectSingle({uid}) === null) {
-    try {
-      await knex.withSchema(dbSchema).into('user').insert({uid, email})
-    } catch(e) {
-      console.error('couldn\'nt create user', email)
-    }
+    await knex.withSchema(dbSchema).into('user').insert({uid, email})
   }
 }
 
