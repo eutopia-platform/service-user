@@ -1,5 +1,13 @@
+type User {
+  isLoggedIn: Boolean!,
+  name: String
+  callname: String
+  email: String
+}
+
 type Query {
   hello: String
+  user: User
 }
 
 schema {

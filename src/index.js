@@ -9,7 +9,7 @@ const headers = {
   'Access-Control-Allow-Origin': process.env.NODE_ENV === 'development' 
     ? 'http://localhost:1234' : 'https://productcube.io',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'content-type'
+  'Access-Control-Allow-Headers': 'content-type, session-token'
 }
 
 const getArguments = async request => {
@@ -45,7 +45,12 @@ const main = async (request, response) => {
   try {
     const args = await getArguments(request)
 
-    const context = {}
+    const context = {
+      authUrl: process.env.NODE_ENV === 'production' 
+        ? 'https://api.productcube.io/auth' 
+        : 'http://localhost:4000',
+      token: request.headers['session-token']
+    }
     const query = args.query
     const variables = args.variables
     const operationName = args.operationName
