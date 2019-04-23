@@ -31,19 +31,32 @@ class Service {
       cache: new InMemoryCache()
     })
   }
-
-  async query(query) {
-    return await this.client.query({
-      query: gql`${query}`
-    })
-  }
-
-  async mutate(mutation) {
-    return await this.client.mutate({
-      mutation: gql`${mutation}`
-    })
-  }
 }
 
-export const auth = new Service(process.env.NODE_ENV === 'development'
+function service(url) {
+  return new ApolloClient({
+    link: ApolloLink.from([
+      onError(({ graphQLErrors, networkError }) => {
+        if (graphQLErrors)
+          graphQLErrors.map(({ message, locations, path }) =>
+            console.log(
+              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+            ),
+          )
+        if (networkError) console.log(`[Network error]: ${networkError}`)
+      }),
+      new HttpLink({
+        uri: url,
+        credentials: 'same-origin',
+        fetch,
+        headers: {
+          auth: process.env.AUTH_PASSWORD
+        }
+      })
+    ]),
+    cache: new InMemoryCache()
+  })
+}
+
+export const auth = service(process.env.NODE_ENV === 'development'
   ? 'http://localhost:4000' : 'https://auth.api.productcube.io')

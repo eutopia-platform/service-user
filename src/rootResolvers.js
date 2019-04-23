@@ -1,4 +1,5 @@
 import { auth } from './interService'
+import gql from 'graphql-tag'
 
 const knex = require('knex')({
   client: 'pg',
@@ -32,15 +33,18 @@ const rootResolvers = {
     if (!context.token)
       return { isLoggedIn: false }
 
-    const authUser = (await auth.query(`
-      {
-        user(token: "${context.token}") {
+    const authUser = (await auth.query({
+      query: gql`query authUser($token: ID!) {
+        user(token: $token) {
           isLoggedIn
           uid
           email
         }
+      }`,
+      variables: {
+        token: context.token
       }
-    `)).data.user
+    })).data.user
 
     if (!authUser.isLoggedIn)
       return { isLoggedIn: false }
