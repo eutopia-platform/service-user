@@ -10,6 +10,11 @@ type Query {
   user: User
 }
 
+type Mutation {
+  setName(name: String, callname: String): User
+}
+
 schema {
   query: Query
+  mutation: Mutation
 }
