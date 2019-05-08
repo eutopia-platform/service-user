@@ -68,7 +68,6 @@ const rootResolvers = {
   },
 
   setName: async({name, callname}, context) => {
-    console.log(context.token)
     if (!context.token)
       throw new Error('NOT_LOGGED_IN')
     const uid = (await auth.query({
@@ -89,7 +88,6 @@ const rootResolvers = {
     
     await knex.withSchema(dbSchema).into('user').where({uid}).update(names)
     const user = await selectSingle({uid})
-    console.log('user:', user)
   }
 }
 
