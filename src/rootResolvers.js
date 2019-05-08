@@ -65,6 +65,31 @@ const rootResolvers = {
       callname: user.callname,
       email: user.email
     }
+  },
+
+  setName: async({name, callname}, context) => {
+    console.log(context.token)
+    if (!context.token)
+      throw new Error('NOT_LOGGED_IN')
+    const uid = (await auth.query({
+      query: gql`query authUser($token: ID!) {
+        user(token: $token) {
+          uid
+        }
+      }`,
+      variables: {
+        token: context.token
+      }
+    })).data.user.uid
+    
+    const names = {
+      ...(name && name.length && {name}),
+      ...(callname && callname.length && {callname}),
+    }
+    
+    await knex.withSchema(dbSchema).into('user').where({uid}).update(names)
+    const user = await selectSingle({uid})
+    console.log('user:', user)
   }
 }
 
