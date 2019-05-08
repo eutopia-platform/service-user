@@ -11,7 +11,7 @@ type Query {
 }
 
 type Mutation {
-  setName(name: String, callname: String): Boolean
+  setName(name: String, callname: String): User
 }
 
 schema {

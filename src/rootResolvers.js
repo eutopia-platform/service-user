@@ -88,6 +88,10 @@ const rootResolvers = {
     
     await knex.withSchema(dbSchema).into('user').where({uid}).update(names)
     const user = await selectSingle({uid})
+    return {
+      ...user,
+      isLoggedIn: true
+    }
   }
 }
 
