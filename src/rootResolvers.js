@@ -1,5 +1,6 @@
 import { auth } from './interService'
 import gql from 'graphql-tag'
+import crypto from 'crypto'
 
 const knex = require('knex')({
   client: 'pg',
@@ -16,11 +17,7 @@ const dbSchema = 'sc_user'
 const select = async cond => await knex.select().withSchema(dbSchema).from('user').where(cond)
 const selectSingle = async cond => await select(cond) |> (_ => #.length ? #[0] : null)()
 
-const createUser = async (uid, email) => {
-  if (await selectSingle({uid}) === null) {
-    await knex.withSchema(dbSchema).into('user').insert({uid, email})
-  }
-}
+const hashUid = uid => crypto.createHash('sha256').update(uid).digest('base64')
 
 const rootResolvers = {
   hello: () => 'Hello there',
@@ -63,7 +60,8 @@ const rootResolvers = {
       isLoggedIn: true, 
       name: user.name,
       callname: user.callname,
-      email: user.email
+      email: user.email,
+      id: hashUid(user.uid),
     }
   },
 
@@ -90,7 +88,8 @@ const rootResolvers = {
     const user = await selectSingle({uid})
     return {
       ...user,
-      isLoggedIn: true
+      id: hashUid(user.uid),
+      isLoggedIn: true,
     }
   }
 }
