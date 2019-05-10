@@ -19,6 +19,11 @@ const selectSingle = async cond => await select(cond) |> (_ => #.length ? #[0] :
 
 const hashUid = uid => crypto.createHash('sha256').update(uid).digest('base64')
 
+const createUser = async (uid, email) => {
+  if (await selectSingle({ uid }) === null)
+    await knex.withSchema(dbSchema).into('user').insert({ uid, email })
+}
+
 const rootResolvers = {
   hello: () => 'Hello there',
 
