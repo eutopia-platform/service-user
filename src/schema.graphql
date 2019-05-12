@@ -1,9 +1,9 @@
 type User {
-  isLoggedIn: Boolean
+  isLoggedIn: Boolean!
   id: ID!
-  name: String
-  callname: String
-  email: String
+  name: String!
+  callname: String!
+  email: String!
 }
 
 type Query {
