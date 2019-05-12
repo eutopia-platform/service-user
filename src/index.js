@@ -49,7 +49,8 @@ const main = async (request, response) => {
       authUrl: process.env.NODE_ENV === 'production' 
         ? 'https://api.productcube.io/auth' 
         : 'http://localhost:4000',
-      token: request.headers['session-token']
+      token: request.headers['session-token'],
+      headers: request.headers,
     }
     const query = args.query
     const variables = args.variables

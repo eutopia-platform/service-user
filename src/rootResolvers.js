@@ -10,7 +10,8 @@ const knex = require('knex')({
     user: process.env.USER_DATABASE_USER,
     password: process.env.USER_DATABASE_PASSWORD,
     database: process.env.USER_DATABASE_NAME
-  }
+  },
+  searchPath: 'sc_user',
 })
 
 const dbSchema = 'sc_user'
@@ -68,6 +69,19 @@ const rootResolvers = {
       email: user.email,
       id: hashUid(user.uid),
     }
+  },
+
+  users: async({uids}, context) => {
+    const auth = context.headers.auth
+    if (!auth || auth !== process.env.USER_PASSWORD)
+      throw Error('UNAUTHORIZED')
+    const users = await knex('user').select().whereIn('uid', uids)
+    return users.map(user => ({
+      id: hashUid(user.uid),
+      name: user.name,
+      callname: user.callname,
+      email: user.email,
+    }))
   },
 
   setName: async({name, callname}, context) => {

@@ -1,5 +1,5 @@
 type User {
-  isLoggedIn: Boolean!,
+  isLoggedIn: Boolean
   id: ID!
   name: String
   callname: String
@@ -9,6 +9,7 @@ type User {
 type Query {
   hello: String
   user: User
+  users(uids: [ID!]!): [User!]!
 }
 
 type Mutation {
