@@ -88,14 +88,8 @@ const rootResolvers = {
     const auth = context.headers.auth
     if (!auth || auth !== process.env.USER_PASSWORD)
       throw Error('UNAUTHORIZED')
-    const user = await knex('user').select().where({email})
-    if (!user) return
-    return {
-      name: user.name,
-      callname: user.callname,
-      email: user.email,
-      id: hashUid(user.uid),
-    }
+    const user = await selectSingle({email})
+    return user ? user.uid : null
   },
 
   setName: async({name, callname}, context) => {
