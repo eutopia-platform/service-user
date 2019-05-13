@@ -75,7 +75,8 @@ const rootResolvers = {
     const auth = context.headers.auth
     if (!auth || auth !== process.env.USER_PASSWORD)
       throw Error('UNAUTHORIZED')
-    const users = await knex('user').select().whereIn('uid', uids)
+    const usersUnordered = await knex('user').select().whereIn('uid', uids)
+    const users = uids.map(uid => usersUnordered.find(user => user.uid === uid))
     return users.map(user => ({
       id: hashUid(user.uid),
       name: user.name,
