@@ -26,7 +26,13 @@ function service(url) {
         }
       })
     ]),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    query: {
+      fetchPolicy: 'network-only'
+    },
+    mutation: {
+      fetchPolicy: 'network-only'
+    }
   })
 }
 
