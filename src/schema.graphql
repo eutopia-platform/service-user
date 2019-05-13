@@ -10,6 +10,7 @@ type Query {
   hello: String
   user: User
   users(uids: [ID!]!): [User!]!
+  getUser(email: String!): User
 }
 
 type Mutation {
