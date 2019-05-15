@@ -8,12 +8,12 @@ type User {
 type Query {
   hello: String
   user: User
-  usersById(ids: [String!]!): [User!]!
+  usersById(ids: [ID!]!): [User!]!
   usersByEmail(emails: [String!]!): [User!]!
 }
 
 type Mutation {
-  setName(name: String, callname: String): User
+  setName(name: String, callname: String): User!
 }
 
 schema {

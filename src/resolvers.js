@@ -51,6 +51,20 @@ export default {
     }
   },
 
+  Mutation: {
+    setName: async (root, { name, callname }, context) => {
+      if (!context.userId) throw new AuthenticationError('NOT_LOGGED_IN')
+      const names = {
+        ...(name && name.length && { name }),
+        ...(callname && callname.length && { callname })
+      }
+      await knex('user')
+        .where({ uid: context.userId })
+        .update(names)
+      return (await knex('user').where({ uid: context.userId }))[0]
+    }
+  },
+
   User: {
     id: ({ uid }, _, context) =>
       context.isService
