@@ -6,8 +6,8 @@ type User {
 }
 
 type Query {
-  hello: String
-  user: User
+  hello: String!
+  user: User!
   usersById(ids: [ID!]!): [User!]!
   usersByEmail(emails: [String!]!): [User!]!
 }
