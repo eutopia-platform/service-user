@@ -1,15 +1,15 @@
 type User {
-  id: ID
-  name: String
-  callname: String
-  email: String
+  id: ID!
+  name: String!
+  callname: String!
+  email: String!
 }
 
 type Query {
   hello: String
   user: User
-  users(uids: [ID!]!): [User!]!
-  getUser(email: String!): ID
+  usersById(ids: [String!]!): [User!]!
+  usersByEmail(emails: [String!]!): [User!]!
 }
 
 type Mutation {

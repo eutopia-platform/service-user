@@ -40,11 +40,15 @@ export default async (request, response) => {
         }
       })).data.user.uid
 
+  const isService =
+    request.headers.auth && request.headers.auth === process.env.USER_PASSWORD
+
   new ApolloServer({
     typeDefs: schema,
     resolvers,
     context: {
-      userId
+      userId,
+      isService
     }
   }).createHandler({
     path: '/'

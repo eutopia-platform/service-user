@@ -1,4 +1,8 @@
-import { AuthenticationError } from 'apollo-server-micro'
+import {
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError
+} from 'apollo-server-micro'
 import crypto from 'crypto'
 
 const knex = require('knex')({
@@ -17,19 +21,43 @@ export default {
   Query: {
     hello: () => 'user service says hello',
 
-    user: async (root, args, context, info) => {
+    user: async (root, args, context) => {
       if (!context.userId) throw new AuthenticationError('NOT_LOGGED_IN')
       return (await knex('user').where({ uid: context.userId }))[0]
     },
 
-    users: () => []
+    usersById: async (root, { ids }, context) => {
+      if (!context.isService) throw new ForbiddenError()
+      const users = await knex('user').whereIn('uid', ids)
+      return ids.map(uid => {
+        const user = users.find(user => user.uid === uid)
+        if (user) return user
+        else
+          throw new UserInputError(
+            `user with ${ids.indexOf(uid) + 1}. id doesn't exist`
+          )
+      })
+    },
+
+    usersByEmail: async (root, { emails }, context) => {
+      if (!context.isService) throw new ForbiddenError()
+      const users = await knex('user').whereIn('email', emails)
+      return emails.map(email => {
+        const user = users.find(user => user.email === email)
+        if (user) return user
+        else
+          throw new UserInputError(`user with email "${email}" doesn't exist`)
+      })
+    }
   },
 
   User: {
-    id: ({ uid }) =>
-      crypto
-        .createHash('sha256')
-        .update(uid)
-        .digest('base64')
+    id: ({ uid }, _, context) =>
+      context.isService
+        ? uid
+        : crypto
+            .createHash('sha256')
+            .update(uid)
+            .digest('base64')
   }
 }
