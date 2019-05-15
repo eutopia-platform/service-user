@@ -1,20 +1,19 @@
 type User {
-  isLoggedIn: Boolean!
-  id: ID
-  name: String
-  callname: String
-  email: String
+  id: ID!
+  name: String!
+  callname: String!
+  email: String!
 }
 
 type Query {
   hello: String
   user: User
-  users(uids: [ID!]!): [User!]!
-  getUser(email: String!): ID
+  usersById(ids: [ID!]!): [User!]!
+  usersByEmail(emails: [String!]!): [User!]!
 }
 
 type Mutation {
-  setName(name: String, callname: String): User
+  setName(name: String, callname: String): User!
 }
 
 schema {
