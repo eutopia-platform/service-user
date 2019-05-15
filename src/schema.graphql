@@ -1,5 +1,4 @@
 type User {
-  isLoggedIn: Boolean!
   id: ID
   name: String
   callname: String
