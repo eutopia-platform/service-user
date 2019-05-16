@@ -25,20 +25,23 @@ export default async (request, response) => {
   )
 
   const sessionToken = request.headers['session-token'] || null
-  const userId = !sessionToken
-    ? null
-    : (await authService.query({
-        query: gql`
-          query sessionUser($sessionToken: ID!) {
-            user(token: $sessionToken) {
-              uid
+  let userId = null
+  try {
+    userId = !sessionToken
+      ? null
+      : (await authService.query({
+          query: gql`
+            query sessionUser($sessionToken: ID!) {
+              user(token: $sessionToken) {
+                uid
+              }
             }
+          `,
+          variables: {
+            sessionToken
           }
-        `,
-        variables: {
-          sessionToken
-        }
-      })).data.user.uid
+        })).data.user.uid
+  } catch (err) {}
 
   const isService =
     request.headers.auth && request.headers.auth === process.env.USER_PASSWORD
