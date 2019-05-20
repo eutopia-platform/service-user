@@ -34,6 +34,7 @@
     "apollo-link": "^1.2.11",
     "apollo-link-error": "^1.1.10",
     "apollo-link-http": "^1.5.14",
+    "apollo-server-micro": "^2.5.0",
     "graphql": "^14.2.0",
     "graphql-tag": "^2.10.1",
     "knex": "^0.16.5",
