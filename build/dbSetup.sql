@@ -8,8 +8,8 @@ CREATE TABLE schema_user.user (
   callname  varchar   NOT NULL
 );
 
-DROP schema_user IF EXISTS service_user;
-CREATE schema_user service_user;
+DROP user service_user IF EXISTS;
+CREATE user service_user;
 
 GRANT USAGE ON SCHEMA schema_user TO service_user;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA schema_user TO service_user;

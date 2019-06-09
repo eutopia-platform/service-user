@@ -62,6 +62,19 @@ export default {
         .where({ id: context.userId })
         .update(names)
       return (await knex('user').where({ id: context.userId }))[0]
+    },
+
+    addUser: async (root, { id, email }, { isService }) => {
+      if (!isService) throw new ForbiddenError('UNAUTHORIZED')
+      if ((await knex('user').where({ email })).length > 0)
+        throw new UserInputError('ALREADY_EXISTS')
+      const name = email.split('@')[0].replace('.', ' ')
+      await knex('user').insert({
+        id,
+        email,
+        name,
+        callname: name.split(' ')[0]
+      })
     }
   },
 

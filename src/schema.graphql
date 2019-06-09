@@ -14,6 +14,7 @@ type Query {
 
 type Mutation {
   setName(name: String, callname: String): User!
+  addUser(id: ID!, email: String!): Boolean
 }
 
 schema {
