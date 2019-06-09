@@ -14,7 +14,7 @@ const knex = require('knex')({
     password: process.env.USER_DATABASE_PASSWORD,
     database: process.env.USER_DATABASE_NAME
   },
-  searchPath: 'sc_user'
+  searchPath: 'schema_user'
 })
 
 export default {
@@ -23,18 +23,18 @@ export default {
 
     user: async (root, args, context) => {
       if (!context.userId) throw new AuthenticationError('NOT_LOGGED_IN')
-      return (await knex('user').where({ uid: context.userId }))[0]
+      return (await knex('user').where({ id: context.userId }))[0]
     },
 
     usersById: async (root, { ids }, context) => {
       if (!context.isService) throw new ForbiddenError()
-      const users = await knex('user').whereIn('uid', ids)
-      return ids.map(uid => {
-        const user = users.find(user => user.uid === uid)
+      const users = await knex('user').whereIn('id', ids)
+      return ids.map(id => {
+        const user = users.find(user => user.id === id)
         if (user) return user
         else
           throw new UserInputError(
-            `user with ${ids.indexOf(uid) + 1}. id doesn't exist`
+            `user with ${ids.indexOf(id) + 1}. id doesn't exist`
           )
       })
     },
@@ -59,19 +59,19 @@ export default {
         ...(callname && callname.length && { callname })
       }
       await knex('user')
-        .where({ uid: context.userId })
+        .where({ id: context.userId })
         .update(names)
-      return (await knex('user').where({ uid: context.userId }))[0]
+      return (await knex('user').where({ id: context.userId }))[0]
     }
   },
 
   User: {
-    id: ({ uid }, _, context) =>
+    id: ({ id }, _, context) =>
       context.isService
-        ? uid
+        ? id
         : crypto
             .createHash('sha256')
-            .update(uid)
+            .update(id)
             .digest('base64')
   }
 }

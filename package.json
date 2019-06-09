@@ -13,12 +13,7 @@
   },
   "homepage": "https://github.com/eutopia-platform/service_user#readme",
   "watch": {
-    "build": {
-      "patterns": [
-        "src"
-      ],
-      "extensions": "js,graphql"
-    }
+    "build": "src/*.{js,graphql}"
   },
   "scripts": {
     "build": "node ./build/buildSchema.js & babel src -d dist",
