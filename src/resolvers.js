@@ -68,7 +68,10 @@ export default {
       if (!isService) throw new ForbiddenError('UNAUTHORIZED')
       if ((await knex('user').where({ email })).length > 0)
         throw new UserInputError('ALREADY_EXISTS')
-      const name = email.split('@')[0].replace('.', ' ')
+      const name = email
+        .split('@')[0]
+        .replace('.', ' ')
+        .replace(/(?:^|\s)\S/g, c => c.toUpperCase())
       await knex('user').insert({
         id,
         email,
