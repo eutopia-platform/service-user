@@ -1,9 +1,12 @@
 import {
   AuthenticationError,
   ForbiddenError,
-  UserInputError
+  UserInputError,
+  gql
 } from 'apollo-server-micro'
 import crypto from 'crypto'
+
+import { work as workspace } from './interService'
 
 const knex = require('knex')({
   client: 'pg',
@@ -90,6 +93,18 @@ export default {
         : crypto
             .createHash('sha256')
             .update(id)
-            .digest('base64')
+            .digest('base64'),
+    invitations: async ({ id }) =>
+      (await workspace.query({
+        query: gql`
+          query userInvitations($id: ID!) {
+            invitations(id: $id)
+          }
+        `,
+        fetchPolicy: 'network-only',
+        variables: {
+          id
+        }
+      })).data.invitations
   }
 }

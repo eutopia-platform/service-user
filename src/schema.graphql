@@ -4,6 +4,7 @@ type User {
   callname: String!
   email: String!
   joined: String
+  invitations: [String!]
 }
 
 type Query {

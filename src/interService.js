@@ -40,3 +40,10 @@ export const auth = service(
     : 'https://auth.api.productcube.io',
   process.env.AUTH_PASSWORD
 )
+
+export const work = service(
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:11000'
+    : 'https://work.api.productcube.io',
+  process.env.WORKSPACE_PASSWORD
+)
