@@ -83,6 +83,7 @@ export default {
   },
 
   User: {
+    joined: ({ joined }) => (joined ? joined.toISOString() : null),
     id: ({ id }, _, context) =>
       context.isService
         ? id

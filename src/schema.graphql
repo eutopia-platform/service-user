@@ -3,6 +3,7 @@ type User {
   name: String!
   callname: String!
   email: String!
+  joined: String
 }
 
 type Query {
