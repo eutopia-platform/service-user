@@ -76,7 +76,8 @@ export default {
         id,
         email,
         name,
-        callname: name.split(' ')[0]
+        callname: name.split(' ')[0],
+        joined: knex.fn.now()
       })
     }
   },
