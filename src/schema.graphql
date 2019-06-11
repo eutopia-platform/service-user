@@ -1,3 +1,8 @@
+enum Role {
+  USER
+  ADMIN
+}
+
 type User {
   id: ID!
   name: String!
@@ -5,6 +10,7 @@ type User {
   email: String!
   joined: String
   invitations: [String!]
+  role: Role
 }
 
 type Query {

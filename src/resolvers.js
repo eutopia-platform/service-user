@@ -105,6 +105,7 @@ export default {
         variables: {
           id
         }
-      })).data.invitations
+      })).data.invitations,
+    role: (root, _, { userRole }) => userRole
   }
 }
