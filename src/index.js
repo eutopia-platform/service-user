@@ -25,23 +25,27 @@ export default async (request, response) => {
   )
 
   const sessionToken = request.headers['session-token'] || null
-  let userId = null
-  try {
-    userId = !sessionToken
-      ? null
-      : (await authService.query({
-          query: gql`
-            query sessionUser($sessionToken: ID!) {
-              user(token: $sessionToken) {
-                uid
-              }
-            }
-          `,
-          variables: {
-            sessionToken
+
+  const { userId, userRole } = await authService
+    .query({
+      query: gql`
+        query sessionUser($sessionToken: ID!) {
+          user(sessionToken: $sessionToken) {
+            id
+            role
           }
-        })).data.user.uid
-  } catch (err) {}
+        }
+      `,
+      variables: {
+        sessionToken
+      },
+      fetchPolicy: 'network-only'
+    })
+    .then(({ data: { user: { id, role } } }) => ({
+      userId: id,
+      userRole: role
+    }))
+    .catch(() => ({ userId: null, role: 'USER' }))
 
   const isService =
     request.headers.auth && request.headers.auth === process.env.USER_PASSWORD
@@ -51,6 +55,7 @@ export default async (request, response) => {
     resolvers,
     context: {
       userId,
+      userRole,
       isService
     }
   }).createHandler({

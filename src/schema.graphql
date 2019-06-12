@@ -1,8 +1,16 @@
+enum Role {
+  USER
+  ADMIN
+}
+
 type User {
   id: ID!
   name: String!
   callname: String!
   email: String!
+  joined: String
+  invitations: [String!]
+  role: Role
 }
 
 type Query {
@@ -14,6 +22,7 @@ type Query {
 
 type Mutation {
   setName(name: String, callname: String): User!
+  addUser(id: ID!, email: String!): Boolean
 }
 
 schema {
